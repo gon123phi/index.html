@@ -391,6 +391,7 @@
     font-style: italic;
     line-height: 1.8;
     transition: opacity 0.5s;
+    margin: 0 auto;
   }
   .shooting-star {
     position: absolute;
@@ -520,15 +521,39 @@
   </div>
 </div>
 
+<!-- Nhạc nền -->
+<audio id="bgMusic" loop playsinline>
+  <source src="giothi.mp4" type="audio/mp4">
+  <!-- Nếu file nhạc của bạn là .mp3, bạn có thể sửa lại src thành file .mp3 và type="audio/mpeg" -->
+</audio>
+
 <script>
-// Cursor
+// Logic Nhạc nền
+const music = document.getElementById('bgMusic');
+let musicStarted = false;
+
+function startMusic() {
+  if (!musicStarted && music) {
+    music.play().then(() => {
+      musicStarted = true;
+    }).catch((err) => {
+      console.log("Trình duyệt chặn autoplay âm thanh trước khi user tương tác.", err);
+    });
+  }
+}
+
+// Lắng nghe tương tác đầu tiên của user để bật nhạc
+document.addEventListener('click', startMusic);
+document.addEventListener('touchstart', startMusic, {passive: true});
+
+// Cursor tùy chỉnh
 const cursor = document.getElementById('cursor');
 document.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
 });
 
-// Heart burst on click
+// Hiệu ứng thả tim khi click
 document.addEventListener('click', e => {
   const hearts = ['❤️','💕','💖','💗','🌸','✨'];
   for(let i = 0; i < 4; i++) {
@@ -542,7 +567,7 @@ document.addEventListener('click', e => {
   }
 });
 
-// Petals
+// Mưa cánh hoa
 const petalsContainer = document.getElementById('petals');
 for(let i = 0; i < 18; i++) {
   const p = document.createElement('div');
@@ -556,7 +581,7 @@ for(let i = 0; i < 18; i++) {
   petalsContainer.appendChild(p);
 }
 
-// Navigation
+// Chuyển trang
 function goTo(n) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page'+n).classList.add('active');
@@ -569,11 +594,10 @@ function goTo(n) {
 function openEnvelope() {
   const env = document.getElementById('envelope');
   env.classList.toggle('open');
-
-  startMusic(); //  thêm dòng này
+  startMusic(); 
 }
 
-// Reasons
+// Dữ liệu và render: Lý do
 const reasons = [
   { num:'01', icon:'😊', text:'Nụ cười của em làm anh quên hết mọi chuyện buồn trong ngày.' },
   { num:'02', icon:'💬', text:'Em kể chuyện linh tinh mà anh nghe cả ngày không biết chán.' },
@@ -601,7 +625,7 @@ function buildReasons() {
   });
 }
 
-// Memories
+// Dữ liệu và render: Kỉ niệm
 const memories = [
   { emoji:'☕', label:'Buổi sáng', desc:'Nhớ lúc em hay nhắn tin sớm, hỏi anh ăn gì chưa.', rot:'-3deg', color:'#e8576a' },
   { emoji:'🌙', label:'Đêm khuya', desc:'Hôm đó em ngủ quên khi đang nhắn tin. Dễ thương lắm.', rot:'2deg', color:'#9b59b6' },
@@ -628,7 +652,7 @@ function buildMemories() {
   });
 }
 
-// Stars
+// Dữ liệu và render: Bầu trời sao
 function buildStars() {
   const container = document.getElementById('starsContainer');
   if(container.children.length) return;
@@ -657,12 +681,14 @@ let wishIdx = 0;
 function sendWish() {
   const display = document.getElementById('wishDisplay');
   display.style.opacity = '0';
-  // Shooting star
+  
+  // Hiệu ứng sao băng
   const ss = document.createElement('div');
   ss.className = 'shooting-star';
   ss.style.left = (Math.random()*80+10)+'vw';
   ss.style.top = (Math.random()*30+10)+'vh';
   document.getElementById('page5').appendChild(ss);
+  
   setTimeout(() => ss.remove(), 1300);
   setTimeout(() => {
     display.textContent = wishes[wishIdx % wishes.length];
@@ -671,38 +697,6 @@ function sendWish() {
     display.style.opacity = '1';
   }, 600);
 }
-</script const music = document.getElementById('bgMusic');
-let musicStarted = false;
-
-function startMusic() {
-  if (!musicStarted) {
-    music.play().then(() => {
-      musicStarted = true;
-    }).catch(() => {});
-  }
-}
-
-document.addEventListener('click', startMusic);
-document.addEventListener('touchstart', startMusic); >const music = document.getElementById('bgMusic');
-
-// đảm bảo chỉ bật 1 lần
-let musicStarted = false;
-
-function startMusic() {
-  if (!musicStarted) {
-    music.play().then(() => {
-      musicStarted = true;
-    }).catch(() => {});
-  }
-}
-
-// iPhone yêu cầu user interaction → gắn vào click
-document.addEventListener('click', startMusic);
-document.addEventListener('touchstart', startMusic);
-</body><audio id="bgMusic" loop playsinline>
-  <source src="giothi.mp4" type="audio/mp4">
-</audio>
-<audio id="bgMusic" loop playsinline>
-  <source src="giothi.mp4" type="audio/mp4">
-</audio>
+</script>
+</body>
 </html>
